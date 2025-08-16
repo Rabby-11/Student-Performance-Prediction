@@ -1,50 +1,50 @@
-from flask import Flask, request, jsonify
+import streamlit as st
 import joblib
 import pandas as pd
 
-# Load the saved model (pipeline with preprocessing + classifier)
-model = joblib.load("student_performance_prediction_advanced_updated.joblib")
+# Load the trained pipeline
+model = joblib.load("best_student_performance_pipeline.joblib")
 
-app = Flask(__name__)
+st.title("🎓 Student Performance Prediction App")
+st.write("Enter student data to predict performance (Pass/Fail).")
 
-@app.route("/")
-def home():
-    return {"message": "Student Performance Prediction API is running."}
+# Collect user inputs
+Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=85)
+Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=75)
+Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=70)
+Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=10)
+Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=78)
+Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=60)
+Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=80)
+Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    try:
-        # JSON input example:
-        {
-          "Attendance": 85,
-          "Assignment_Score": 50,
-          "Quiz_Score": 70,
-          "Study_Hours_Per_Week": 8,
-          "Internal_Assessment": 60,
-          "Participation_Score": 5,
-          "Project_Score": 75,
-          "Exam_Anxiety_Level": 3
-        }
+if st.button("Predict Performance"):
+    # Match the exact order of features
+    input_data = pd.DataFrame([[
+        Attendance,
+        Assignment_Score,
+        Quiz_Score,
+        Study_Hours_Per_Week,
+        Internal_Assessment,
+        Participation_Score,
+        Project_Score,
+        Exam_Anxiety_Level
+    ]], columns=[
+        'Attendance',
+        'Assignment_Score',
+        'Quiz_Score',
+        'Study_Hours_Per_Week',
+        'Internal_Assessment',
+        'Participation_Score',
+        'Project_Score',
+        'Exam_Anxiety_Level'
+    ])
 
-        data = request.get_json()
+    prediction = model.predict(input_data)[0]
 
-        # Convert input dict to DataFrame (1 row)
-        input_df = pd.DataFrame([data])
+    result = "Pass" if prediction == 1 else "Fail"
+    st.success(f"Predicted Performance: **{result}**")
 
-        # Make prediction
-        prediction = model.predict(input_df)[0]
-        probability = model.predict_proba(input_df)[0][1]
 
-        # Map 0/1 to Fail/Pass if needed
-        result = "Pass" if prediction == 1 else "Fail"
 
-        return jsonify({
-            "prediction": result,
-            "probability_pass": float(probability)
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)})
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
 
