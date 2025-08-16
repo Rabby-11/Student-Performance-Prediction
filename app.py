@@ -1,25 +1,26 @@
 import streamlit as st
-import joblib
 import pandas as pd
+import cloudpickle
 
-# Load the trained pipeline
-model = joblib.load("best_student_performance_pipeline.joblib")
+# Load the trained pipeline safely
+with open("best_student_performance_pipeline.joblib", "rb") as f:
+    model = cloudpickle.load(f)
 
 st.title("🎓 Student Performance Prediction App")
 st.write("Enter student data to predict performance (Pass/Fail).")
 
 # Collect user inputs
-Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=0)
-Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=0)
-Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=0)
-Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=0)
-Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=0)
-Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=0)
-Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=0)
-Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=0)
+Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=75)
+Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=70)
+Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=65)
+Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=10)
+Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=60)
+Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=50)
+Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=75)
+Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
 
 if st.button("Predict Performance"):
-    # Match the exact order of features
+    # Make sure feature names match the training data
     input_data = pd.DataFrame([[
         Attendance,
         Assignment_Score,
@@ -30,17 +31,17 @@ if st.button("Predict Performance"):
         Project_Score,
         Exam_Anxiety_Level
     ]], columns=[
-        'Attendance',
-        'Assignment_Score',
-        'Quiz_Score',
-        'Study_Hours_Per_Week',
-        'Internal_Assessment',
-        'Participation_Score',
-        'Project_Score',
-        'Exam_Anxiety_Level'
+        "Attendance",
+        "Assignment_Score",
+        "Quiz_Score",
+        "Study_Hours_Per_Week",
+        "Internal_Assessment",
+        "Participation_Score",
+        "Project_Score",
+        "Exam_Anxiety_Level"
     ])
 
+    # Prediction
     prediction = model.predict(input_data)[0]
-
     result = "Pass" if prediction == 1 else "Fail"
     st.success(f"Predicted Performance: **{result}**")
