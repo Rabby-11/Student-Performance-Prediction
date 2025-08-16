@@ -21,8 +21,7 @@ Project_Score = st.number_input("Project Score", min_value=0, max_value=100, val
 Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
 
 if st.button("Predict Performance"):
-    # Make sure feature names match the training data
-    input_data = pd.DataFrame([[
+    input_data = [[
         Attendance,
         Assignment_Score,
         Quiz_Score,
@@ -31,20 +30,14 @@ if st.button("Predict Performance"):
         Participation_Score,
         Project_Score,
         Exam_Anxiety_Level
-    ]], columns=[
-        "Attendance",
-        "Assignment_Score",
-        "Quiz_Score",
-        "Study_Hours_Per_Week",
-        "Internal_Assessment",
-        "Participation_Score",
-        "Project_Score",
-        "Exam_Anxiety_Level"
-    ])
+    ]]
 
-    # Prediction
     prediction = model.predict(input_data)[0]
+
     result = "Pass" if prediction == 1 else "Fail"
     st.success(f"Predicted Performance: **{result}**")
+
+
+
 
 
