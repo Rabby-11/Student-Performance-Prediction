@@ -2,9 +2,14 @@ import streamlit as st
 import joblib
 import pandas as pd
 import cloudpickle
+import traceback
 # Load the trained pipeline
-with open("best_student_performance_pipeline.joblib", "rb") as f:
-    model = cloudpickle.load(f)
+try:
+    model = joblib.load("best_student_performance_pipeline.joblib")
+except Exception as e:
+    st.error("❌ Failed to load model.")
+    st.text(traceback.format_exc())
+    model = None
 st.title("🎓 Student Performance Prediction App")
 st.write("Enter student data to predict performance (Pass/Fail).")
 
@@ -44,6 +49,7 @@ if st.button("Predict Performance"):
 
     result = "Pass" if prediction == 1 else "Fail"
     st.success(f"Predicted Performance: **{result}**")
+
 
 
 
