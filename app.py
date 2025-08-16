@@ -18,6 +18,7 @@ Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, 
 Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=16)
 Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=17)
 Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
+st.write("Model expects features:", list(model.feature_names_in_))
 
 if st.button("Predict Performance"):
     # Make sure feature names match
