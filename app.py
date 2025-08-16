@@ -21,25 +21,26 @@ Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, m
 
 if st.button("Predict Performance"):
     # Make sure feature names match the training data
-    input_data = pd.DataFrame([[
-        Attendance,
-        Assignment_Score,
-        Quiz_Score,
-        Study_Hours_Per_Week,
-        Internal_Assessment,
-        Participation_Score,
-        Project_Score,
-        Exam_Anxiety_Level
-    ]], columns=[
-        "Attendance",
-        "Assignment_Score",
-        "Quiz_Score",
-        "Study_Hours_Per_Week",
-        "Internal_Assessment",
-        "Participation_Score",
-        "Project_Score",
-        "Exam_Anxiety_Level"
-    ])
+ input_data = pd.DataFrame([[
+    Attendance,
+    Assignment_Score,
+    Quiz_Score,
+    Study_Hours_Per_Week,
+    Internal_Assessment,
+    Participation_Score,
+    Project_Score,
+    Exam_Anxiety_Level
+]], columns=[
+    "Attendance",
+    "Assignment_Score",
+    "Quiz_Score",
+    "Study_Hours_Per_Week",
+    "Internal_Assessment",
+    "Participation_Score",
+    "Project_Score",
+    "Exam_Anxiety_Level"
+])
+
 
     # Prediction
     prediction = model.predict(input_data)[0]
