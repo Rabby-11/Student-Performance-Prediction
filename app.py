@@ -10,14 +10,14 @@ st.title("🎓 Student Performance Prediction App")
 st.write("Enter student data to predict performance (Pass/Fail).")
 
 # Collect user inputs
-Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=75)
-Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=70)
-Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=65)
-Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=10)
-Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=60)
-Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=50)
-Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=75)
-Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
+Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=0)
+Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=0)
+Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=0)
+Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=0)
+Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=0)
+Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=0)
+Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=0)
+Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=0)
 
 if st.button("Predict Performance"):
     # Make sure feature names match the training data
