@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 
 # Load the saved model (pipeline with preprocessing + classifier)
-model = joblib.load("best_student_performance_pipeline.joblib")
+model = joblib.load("student_performance_prediction_advanced_updated.joblib")
 
 app = Flask(__name__)
 
@@ -47,3 +47,4 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
