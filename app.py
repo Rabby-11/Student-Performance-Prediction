@@ -38,8 +38,32 @@ if st.button("Predict Performance"):
     "Internal_Assessment",
     "Participation_Score",
     "Project_Score",
-    "Exam_Anxiety_Level"
-])
+    "Exam_Anxiety_Level"if st.button("Predict Performance"):
+    # Make sure feature names match
+    input_data = pd.DataFrame([[
+        Attendance,
+        Assignment_Score,
+        Quiz_Score,
+        Study_Hours_Per_Week,
+        Internal_Assessment,
+        Participation_Score,
+        Project_Score,
+        Exam_Anxiety_Level
+    ]], columns=[
+        "Attendance",
+        "Assignment_Score",
+        "Quiz_Score",
+        "Study_Hours_Per_Week",
+        "Internal_Assessment",
+        "Participation_Score",
+        "Project_Score",
+        "Exam_Anxiety_Level"
+    ])
+
+    prediction = model.predict(input_data)[0]
+    result = "Pass" if prediction == 1 else "Fail"
+    st.success(f"Predicted Performance: **{result}**")
+
 
 
     # Prediction
