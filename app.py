@@ -42,7 +42,7 @@ if st.button("Predict Performance"):
         "Exam_Anxiety_Level"
     ])
 
-    prediction = model.predict(input_data)[1]
+    prediction = model.predict(input_data)[0]
     result = "Pass" if prediction == 1 else "Fail"
     st.success(f"Predicted Performance: **{result}**")
 
