@@ -1,45 +1,49 @@
-import streamlit as st
+from flask import Flask, request, jsonify
+import joblib
 import pandas as pd
-import cloudpickle
 
+# Load the saved model (pipeline with preprocessing + classifier)
+model = joblib.load("best_student_performance_pipeline.joblib")
 
-# Load the trained pipeline safely
-with open("best_student_performance_pipeline.joblib", "rb") as f:
-    model = cloudpickle.load(f)
+app = Flask(__name__)
 
-st.title("🎓 Student Performance Prediction App")
-st.write("Enter student data to predict performance (Pass/Fail).")
+@app.route("/")
+def home():
+    return {"message": "Student Performance Prediction API is running."}
 
-# Collect user inputs
-Attendance = st.number_input("Attendance (%)", min_value=0, max_value=100, value=75)
-Assignment_Score = st.number_input("Assignment Score", min_value=0, max_value=100, value=70)
-Quiz_Score = st.number_input("Quiz Score", min_value=0, max_value=100, value=65)
-Study_Hours_Per_Week = st.number_input("Study Hours per Week", min_value=0, max_value=80, value=10)
-Internal_Assessment = st.number_input("Internal Assessment Score", min_value=0, max_value=100, value=60)
-Participation_Score = st.number_input("Participation Score", min_value=0, max_value=100, value=50)
-Project_Score = st.number_input("Project Score", min_value=0, max_value=100, value=75)
-
-
-if st.button("Predict Performance"):
-    input_data = [[
-        Attendance,
-        Assignment_Score,
-        Quiz_Score,
-        Study_Hours_Per_Week,
-        Internal_Assessment,
-        Participation_Score,
-        Project_Score,
-
-    ]]
-
+@app.route("/predict", methods=["POST"])
+def predict():
     try:
-        prediction = model.predict(input_data)[0]
+        # JSON input example:
+        {
+          "Attendance": 85,
+          "Assignment_Score": 50,
+          "Quiz_Score": 70,
+          "Study_Hours_Per_Week": 8,
+          "Internal_Assessment": 60,
+          "Participation_Score": 5,
+          "Project_Score": 75,
+          "Exam_Anxiety_Level": 3
+        }
+
+        data = request.get_json()
+
+        # Convert input dict to DataFrame (1 row)
+        input_df = pd.DataFrame([data])
+
+        # Make prediction
+        prediction = model.predict(input_df)[0]
+        probability = model.predict_proba(input_df)[0][1]
+
+        # Map 0/1 to Fail/Pass if needed
         result = "Pass" if prediction == 1 else "Fail"
-        st.success(f"Predicted Performance: **{result}**")
+
+        return jsonify({
+            "prediction": result,
+            "probability_pass": float(probability)
+        })
     except Exception as e:
-        st.error(f"Prediction failed: {e}")
+        return jsonify({"error": str(e)})
 
-
-
-
-
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
