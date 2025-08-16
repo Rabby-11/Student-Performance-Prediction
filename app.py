@@ -32,11 +32,12 @@ if st.button("Predict Performance"):
         Exam_Anxiety_Level
     ]]
 
-    prediction = model.predict(input_data)[0]
-
-    result = "Pass" if prediction == 1 else "Fail"
-    st.success(f"Predicted Performance: **{result}**")
-
+    try:
+        prediction = model.predict(input_data)[0]
+        result = "Pass" if prediction == 1 else "Fail"
+        st.success(f"Predicted Performance: **{result}**")
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
 
 
 
