@@ -24,31 +24,38 @@ Project_Score = st.number_input("Project Score", min_value=0, max_value=100, val
 Exam_Anxiety_Level = st.number_input("Exam Anxiety Level (1-10)", min_value=1, max_value=10, value=5)
 
 if st.button("Predict Performance"):
-    # Match the exact order of features
-    input_data = pd.DataFrame([[
-        Attendance,
-        Assignment_Score,
-        Quiz_Score,
-        Study_Hours_Per_Week,
-        Internal_Assessment,
-        Participation_Score,
-        Project_Score,
-        Exam_Anxiety_Level
-    ]], columns=[
-        'Attendance',
-        'Assignment_Score',
-        'Quiz_Score',
-        'Study_Hours_Per_Week',
-        'Internal_Assessment',
-        'Participation_Score',
-        'Project_Score',
-        'Exam_Anxiety_Level'
-    ])
+    if model is None:
+        st.error("🚫 Model not loaded. Please check for loading errors above.")
+    else:
+        try:
+            input_data = pd.DataFrame([[
+                Attendance,
+                Assignment_Score,
+                Quiz_Score,
+                Study_Hours_Per_Week,
+                Internal_Assessment,
+                Participation_Score,
+                Project_Score,
+                Exam_Anxiety_Level
+            ]], columns=[
+                'Attendance',
+                'Assignment_Score',
+                'Quiz_Score',
+                'Study_Hours_Per_Week',
+                'Internal_Assessment',
+                'Participation_Score',
+                'Project_Score',
+                'Exam_Anxiety_Level'
+            ])
 
-    prediction = model.predict(input_data)[0]
+            prediction = model.predict(input_data)[0]
+            result = "Pass" if prediction == 1 else "Fail"
+            st.success(f"🎯 Predicted Performance: **{result}**")
 
-    result = "Pass" if prediction == 1 else "Fail"
-    st.success(f"Predicted Performance: **{result}**")
+        except Exception as e:
+            st.error("⚠️ Prediction failed due to an unexpected error.")
+            st.text(str(e))
+
 
 
 
