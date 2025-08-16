@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
 import cloudpickle
+import joblib
+model = joblib.load("best_student_performance_pipeline.joblib")
+print(model.feature_names_in_)
+
 
 # Load the trained pipeline safely
 with open("best_student_performance_pipeline.joblib", "rb") as f:
@@ -45,3 +49,4 @@ if st.button("Predict Performance"):
     prediction = model.predict(input_data)[0]
     result = "Pass" if prediction == 1 else "Fail"
     st.success(f"Predicted Performance: **{result}**")
+
